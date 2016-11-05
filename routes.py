@@ -3,7 +3,9 @@ from data import SearchBar, CourseData
 from flask.ext.pymongo import PyMongo
 from db_credential import db_name, db_uri
 import requests
-import xml.etree.ElementTree as ET
+from xmljson import badgerfish as bf
+from xml.etree.ElementTree import fromstring
+from json import dumps
 
 app = Flask(__name__)
 
@@ -48,7 +50,9 @@ def index():
 	elif request.method == 'GET':
 		api = requests.get('http://courses.illinois.edu/cisapp/explorer/catalog.xml')
 
-		print api.text['lable']
+		api_json = dumps(bf.data(fromstring(api.text)))
+		print api_json
+		print api.text
 		return render_template('index.html', form=form)
 		"""
 		TODO:
