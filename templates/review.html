@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Review Page</title>
+</head>
+<body>
+	<h1>Hello World!</h1>
+	{{ foo }}
+
+	<form method='POST'>
+	{{ form.hidden_tag() }}
+
+		<div>
+			{{ form.review}}
+		</div>
+		<div>
+			{{ form.tip}}
+		</div>
+
+		<div>
+			{{ form.submit(class='btn-primary')}}
+		</div>
+	</form>
+</body>
+</html>

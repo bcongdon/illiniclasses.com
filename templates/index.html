@@ -20,17 +20,18 @@
 					</button>
 				</span>
 		</div> -->
-			<form method='POST' action='/'>
+			<form method='POST'>
 			{{ form.hidden_tag() }}
 
-			<div>
-				{{ form.course_name.label}}
-				{{ form.course_name}}
-			</div>
+				<div>
+					{{ form.course_name.label}}
+					{{ form.course_name}}
+				</div>
 
-			<div>
-				{{ form.submit(class='btn-primary')}}
-			</div>
+				<div>
+					{{ form.submit(class='btn-primary')}}
+				</div>
+			</form>
 	</div>
 	<div class='col-lg-3'> <!-- Dummy div -->
 	</div>
