@@ -37,7 +37,7 @@ for ui_class in api_classes:
 
 
 # ---------------- Example Collection ------------------------------
-# Collection : 225
+# Collection Name : CS225
 #  
 # First element:
 # {
@@ -53,8 +53,8 @@ for ui_class in api_classes:
 # 	"user" : "pitlv2109"
 # 	"review" : "Like other people have said, there is no magic. 
 #				It will be challenging sometimes, but you will learn a lot. 
-#				Heres some tips: Learning in C++ syntax would be great. 
-#				Start your MPs early. Other than that, enjoy the class."
+#				Heres some tips: Learning in C++ syntax would be great and 
+#				start your MPs early. Other than that, enjoy the class."
 # 	"teacher_review" : ("Cinda Heeren","4.4")
 # 	"hours" : "2.7"
 # }
