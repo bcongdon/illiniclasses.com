@@ -6,6 +6,8 @@ import requests
 from xmljson import badgerfish as bf
 from xml.etree.ElementTree import fromstring
 from json import dumps
+from setup import update
+
 
 app = Flask(__name__)
 
@@ -39,14 +41,17 @@ def index():
 		# Input from search bar
 		user_input = form.course_name.data
 
+		update()
+
 		#course_collection = mongo.db.user_input
-		data = mongo.db.data 
-		result = data.find({'input' : user_input})
-		if result.count() > 0:
-			return redirect(url_for('review_page', course=user_input))
-			# 
-		else:
-			return render_template('index.html', form=form)
+		# class_name = "cs225"
+		# mongo.db[class_name].insert({})
+		# result = data.insert({'input' : user_input})
+		# if result.count() > 0:
+		# 	return redirect(url_for('review_page', course=user_input))
+		# 	# 
+		# else:
+		# 	return render_template('index.html', form=form)
 	elif request.method == 'GET':
 		api = requests.get('http://courses.illinois.edu/cisapp/explorer/catalog.xml')
 

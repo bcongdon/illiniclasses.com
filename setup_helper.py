@@ -24,7 +24,7 @@ def get_latest_semester(current_year_url):
 	# print lastest_semester_url
 	return lastest_semester_url
 
-# get all coursess
+# get all departments
 def get_departments(semester_url):
 	api_response = requests.get(semester_url)
 	api_json = bf.data(fromstring(api_response.text))
@@ -53,3 +53,9 @@ def get_latest_classes(department):
 	api_courses = get_department(api_latest_semester, department)
 	api_classes = get_classes(api_courses)
 	return api_classes
+
+def get_all_departments():
+	api_latest_year = get_latest_year()
+	api_latest_semester = get_latest_semester(api_latest_year)
+	api_courses = get_departments(api_latest_semester)
+	return api_courses
