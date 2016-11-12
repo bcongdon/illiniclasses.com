@@ -8,22 +8,7 @@ from xml.etree.ElementTree import fromstring
 from json import dumps
 # from json import loads
 # import datetime
-from setup_helper import get_latest_classes, get_all_departments
-
-# app = Flask(__name__)
-
-
-# app.config['MONGO_DBNAME'] = db_name
-# app.config['MONGO_URI'] = db_uri
-
-# mongo = PyMongo(app)
-
-# app.secret_key = 'development-key'
-
-# class_name = "cs374"
-# mongo.db[class_name].insert({})
-
-# api_classes = get_latest_classes("CS")
+from setup_helper import get_all_departments, get_all_courses, get_a_course
 
 def update():
 	app = Flask(__name__)
@@ -34,38 +19,30 @@ def update():
 
 	app.secret_key = 'development-key'
 
-	departments = get_all_departments()
+	all_departments_arr = get_all_departments()
 
-	for department in departments:
+	# Populate each department as a collection 
+	# in MongoDB
+	for each_department in all_departments_arr:
+		department_id = each_department['@id']			# e.g. CS
+		mongo.db[str(department_id)].insert({})			# Create a new collection for each department
 
-		department_id = department['@id']
+		# Populate each course as an object for 
+		# each department in MongoDB
+		department_url = each_department['@href']
+		all_courses_arr = get_all_courses(department_url)
 
-		# print departments_id <-works
+		for each_course in all_courses_arr:	
+			course_url = each_course['@href']			# ERROR: TypeError: string indices must be integers, not str
+														# BIOL
+			course = get_a_course(course_url)			# Get a course in JSON format
 
-		# department_list = department
-		api_response = requests.get(department['@href'])
-		department_page = bf.data(fromstring(api_response.text))
-		# print dumps(department_page) <-works!!
-
-		department_courses = department_page['{http://rest.cis.illinois.edu}subject']['courses']['course']
-		for ui_class in department_courses:
-			class_name = str(department_id) + str(ui_class['@id'])
-			
-
-			api_response = requests.get(ui_class['@href'])
-			api_json = bf.data((fromstring(api_response.text)))
-			print dumps(api_json)
-
-			couse_page = api_json['{http://rest.cis.illinois.edu}course']
-			label = couse_page['label']['$']
-			description = couse_page['description']['$']
-
-			# print "Label: " + label + "\nDescription: " + description
-			mongo.db[class_name].insert({	'description' : description,
-											'avg_hours' : 0
-										})
-
-
+			course_id = course['@id']
+			course_name = course['label']['$']
+			course_description = course['description']['$']
+			mongo.db[str(department_id)].insert({'course_id': course_id, 
+				'course_name': course_name, 'course_description': course_description})
+	
 
 # ---------------- Example Collection ------------------------------
 # Collection Name : CS225
@@ -85,7 +62,7 @@ def update():
 # 	"score" : "4"
 # 	"review" : "Like other people have said, there is no magic. 
 #				It will be challenging sometimes, but you will learn a lot. 
-#				Heres some tips: Learning in C++ syntax would be great and 
+#				Here are some tips: Learning in C++ syntax would be great and 
 #				start your MPs early. Other than that, enjoy the class."
 # 	"teacher_review" : ("Cinda Heeren","4.4")
 # 	"hours" : "2.7"

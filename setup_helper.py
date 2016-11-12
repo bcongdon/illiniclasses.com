@@ -7,55 +7,44 @@ from xmljson import badgerfish as bf
 from xml.etree.ElementTree import fromstring
 from json import dumps
 
-# get initial set of all the years
-def get_latest_year():
-	api_response = requests.get('http://courses.illinois.edu/cisapp/explorer/catalog.xml')
-	api_json = bf.data(fromstring(api_response.text))
-	current_year_url = api_json['{http://rest.cis.illinois.edu}schedule']['calendarYears']['calendarYear'][0]['@href']
-	# print current_year_url
-	return current_year_url
+'''
+api_response is the raw data in XML format
+api_json is JSON version of api_response
+'''
 
-# get latest semester
-def get_latest_semester(current_year_url):
-	api_response = requests.get(current_year_url)
+'''
+Get the list of all departments
+Input: Lastest semester API URL
+Ouput: List of all departments in JSON format with each 
+department code (e.g. CS), API URL to its courses, and its name.
+'''
+def get_all_departments():
+	api_response = requests.get('http://courses.illinois.edu/cisapp/explorer/catalog/2017/spring.xml')
 	api_json = bf.data(fromstring(api_response.text))
-	semesters = api_json['{http://rest.cis.illinois.edu}calendarYear']['terms']['term']
-	lastest_semester_url = semesters[-1]['@href']
-	# print lastest_semester_url
-	return lastest_semester_url
+	departments_arr = api_json['{http://rest.cis.illinois.edu}term']['subjects']['subject']
+	return departments_arr
 
-# get all departments
-def get_departments(semester_url):
-	api_response = requests.get(semester_url)
-	api_json = bf.data(fromstring(api_response.text))
-	departments = api_json['{http://rest.cis.illinois.edu}term']['subjects']['subject']
-	return departments
-
-# get a single department
-def get_department(department_url, course_id):
+'''
+Get the list of all courses from a department
+Input: Department API URL
+Output: List of all courses in this department in JSON format
+XML example: http://courses.illinois.edu/cisapp/explorer/catalog/2017/spring/AFRO.xml
+'''
+def get_all_courses(department_url):
 	api_response = requests.get(department_url)
 	api_json = bf.data(fromstring(api_response.text))
-	departments = api_json['{http://rest.cis.illinois.edu}term']['subjects']['subject']
-	# placeholder Loop for departments
-	for department in departments:
-		if department['@id'] == course_id:
-			# print department['@href']
-			return department['@href']
+	courses_arr = api_json['{http://rest.cis.illinois.edu}subject']['courses']['course']
+	return courses_arr
 
-def get_classes(class_url):
-	api_response = requests.get(class_url)
+'''
+Get a specific course 
+Input: Course API URL
+Ouput: A course in JSON format that contains course number, course name, and course description
+XML example: http://courses.illinois.edu/cisapp/explorer/catalog/2017/spring/AFRO/100.xml
+'''
+def get_a_course(course_url):
+	api_response = requests.get(course_url)
 	api_json = bf.data(fromstring(api_response.text))
-	return api_json['{http://rest.cis.illinois.edu}subject']['courses']['course']
+	course = api_json['{http://rest.cis.illinois.edu}course']
+	return course
 
-def get_latest_classes(department):
-	api_latest_year = get_latest_year()
-	api_latest_semester = get_latest_semester(api_latest_year)
-	api_courses = get_department(api_latest_semester, department)
-	api_classes = get_classes(api_courses)
-	return api_classes
-
-def get_all_departments():
-	api_latest_year = get_latest_year()
-	api_latest_semester = get_latest_semester(api_latest_year)
-	api_courses = get_departments(api_latest_semester)
-	return api_courses

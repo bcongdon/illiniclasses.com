@@ -56,8 +56,8 @@ def index():
 		api = requests.get('http://courses.illinois.edu/cisapp/explorer/catalog.xml')
 
 		api_json = dumps(bf.data(fromstring(api.text)))
-		print api_json
-		print api.text
+		#print api_json
+		#print api.text
 		return render_template('index.html', form=form)
 		"""
 		TODO:
