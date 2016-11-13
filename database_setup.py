@@ -21,11 +21,24 @@ def update():
 
 	all_departments_arr = get_all_departments()
 
+	# Return a list of all collections (departments in mlab)
+	all_collections = mongo.db.collection_names()
+
 	# Populate each department as a collection 
 	# in MongoDB
 	for each_department in all_departments_arr:
 		department_id = each_department['@id']			# e.g. CS
-		mongo.db[str(department_id)].insert({})			# Create a new collection for each department
+
+		# Create a new collection for each department if
+		# it's not already there
+		if department_id in all_collections:
+			continue
+		mongo.db[str(department_id)].insert({})			
+
+		# Departments with little information will be passed
+		if (department_id == 'BIOL' or department_id == 'ENT' 
+			or department_id == 'PBIO' or department_id == 'WGGP'):
+			continue
 
 		# Populate each course as an object for 
 		# each department in MongoDB
@@ -33,15 +46,17 @@ def update():
 		all_courses_arr = get_all_courses(department_url)
 
 		for each_course in all_courses_arr:	
-			course_url = each_course['@href']			# ERROR: TypeError: string indices must be integers, not str
-														# BIOL
+			course_url = each_course['@href']			# Get course API URL
 			course = get_a_course(course_url)			# Get a course in JSON format
 
 			course_id = course['@id']
 			course_name = course['label']['$']
+			if 'description' not in course:
+				continue
 			course_description = course['description']['$']
 			mongo.db[str(department_id)].insert({'course_id': course_id, 
 				'course_name': course_name, 'course_description': course_description})
+			
 	
 
 # ---------------- Example Collection ------------------------------

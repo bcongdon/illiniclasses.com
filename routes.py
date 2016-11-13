@@ -11,77 +11,76 @@ from setup import update
 
 app = Flask(__name__)
 
-
-# app.config['MONGOALCHEMY_DATABASE'] = db_name
-# app.config['MONGOALCHEMY_CONNECTION_STRING'] = db_uri
-
-
 app.config['MONGO_DBNAME'] = db_name
 app.config['MONGO_URI'] = db_uri
 
-# db = MongoAlchemy(app)
 mongo = PyMongo(app)
 
 app.secret_key = 'development-key'
 
 #DATA = mongo.db
 
-# TODO
-# Call API to get all courses
-# and create corresponding collectinos
-# and create an array that contains course names
-# because we need to use this array to validate 
-# user input when they search for courses
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
-	form = SearchBar()
-	if request.method == 'POST':
+	search_form = SearchBar()
+	if request.method == 'GET':
+		return render_template('index.html', form=search_form)
+
+	elif request.method == 'POST':
 		
 		# Input from search bar
-		user_input = form.course_name.data
+		user_input = search_form.course_name.data
+		# Convert to uppercase and remove white spaces
+		user_input = user_input.upper().replace(" ", "")
+		# Get department id (e.g. CS) and course number in form of strings
+		department_id = ''.join([char for char in user_input if char.isdigit() != True])
+		course_number = ''.join([char for char in user_input if char.isdigit() == True])
 
-		update()
-
-		#course_collection = mongo.db.user_input
-		# class_name = "cs225"
-		# mongo.db[class_name].insert({})
-		# result = data.insert({'input' : user_input})
-		# if result.count() > 0:
-		# 	return redirect(url_for('review_page', course=user_input))
-		# 	# 
-		# else:
-		# 	return render_template('index.html', form=form)
-	elif request.method == 'GET':
-		api = requests.get('http://courses.illinois.edu/cisapp/explorer/catalog.xml')
-
-		api_json = dumps(bf.data(fromstring(api.text)))
-		#print api_json
-		#print api.text
-		return render_template('index.html', form=form)
-		"""
-		TODO:
-		1. Check to see if course exists
-		2. If yes, render_template to that route using a GET request
-		3. If not, reload the page, pop-up an error message
-		"""
-@app.route('/foo')
-def foo():
-	return render_template('review.html')
+		if is_input_valid(department_id, course_number) == True:
+			return redirect(url_for('review_page', course=department_id+course_number))
+		else:
+			#return render_template('index.html', form=search_form)
+			return redirect(url_for('index'))
 
 @app.route('/<course>', methods=['GET', 'POST'])
 def review_page(course):
 		# Check to see if course is in the database
 		# If yes, return the page
 		# If not, return a 404
-		form = CourseData()
+		review_form = CourseData()
+		search_form = SearchBar()
+
 		if request.method == 'POST':
 
-			
 			return 'test'
 		elif request.method == 'GET':
-			
-			return render_template('review.html', foo=course, form=form)
+			# Convert to uppercase and remove white spaces
+			course = course.upper().replace(" ", "")
+			# Get department id (e.g. CS) and course number in form of strings
+			department_id = ''.join([char for char in course if char.isdigit() != True])
+			course_number = ''.join([char for char in course if char.isdigit() == True])
+
+			if is_input_valid(department_id, course_number):
+				return render_template('review.html', foo=course, form=review_form)
+			else:
+				return redirect(url_for('index'))
+
+# Check to see if a course input is valid
+def is_input_valid(department_id, course_number):
+	course = department_id + ' ' + course_number
+
+	# Get a list of departments from database
+	all_departments = mongo.db.collection_names()
+
+	# Check if input is valid
+	if department_id not in all_departments:
+		return False
+	else:
+		result = mongo.db[str(department_id)].find_one({'course_id': course})
+		print result
+		if result == None:
+			return False 
+		return True
 
 
 if __name__ == '__main__':
