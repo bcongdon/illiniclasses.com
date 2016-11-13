@@ -2,24 +2,35 @@
 <html>
 <head>
 	<title>Review Page</title>
+	<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+	<link rel='stylesheet' type='text/css' href='../static/css/styles.css'> 
 </head>
 <body>
-	<h1>Hello World!</h1>
-	{{ foo }}
-
-	<form method='POST'>
-	{{ form.hidden_tag() }}
-
-		<div>
-			{{ form.review}}
+<div class='row'>
+	<div class='col-lg-12'>
+	<div>
+		<div  id='header'>
+			{{ foo }}
 		</div>
-		<div>
-			{{ form.tip}}
+		<div class='well'>
+			{{ des }}
 		</div>
+	</div>
+		<form method='POST'>
+		{{ form.hidden_tag() }}
 
-		<div>
-			{{ form.submit(class='btn-primary')}}
-		</div>
-	</form>
+			<div>
+				{{ form.review}}
+			</div>
+			<div>
+				{{ form.tip}}
+			</div>
+
+			<div>
+				{{ form.submit(class='btn-primary')}}
+			</div>
+		</form>
+	</div>
+</div>
 </body>
 </html>

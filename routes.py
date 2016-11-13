@@ -18,8 +18,6 @@ mongo = PyMongo(app)
 
 app.secret_key = 'development-key'
 
-#DATA = mongo.db
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
 	search_form = SearchBar()
@@ -51,7 +49,6 @@ def review_page(course):
 		search_form = SearchBar()
 
 		if request.method == 'POST':
-
 			return 'test'
 		elif request.method == 'GET':
 			# Convert to uppercase and remove white spaces
@@ -61,7 +58,12 @@ def review_page(course):
 			course_number = ''.join([char for char in course if char.isdigit() == True])
 
 			if is_input_valid(department_id, course_number):
-				return render_template('review.html', foo=course, form=review_form)
+				# Get description from database
+				course = department_id + ' ' + course_number
+				get_course = mongo.db[str(department_id)].find_one({'course_id': course})
+				description = get_course['course_description']
+				#description = get_course['course_description']
+				return render_template('review.html', foo=course, des=description, form=review_form)
 			else:
 				return redirect(url_for('index'))
 
@@ -69,7 +71,7 @@ def review_page(course):
 def is_input_valid(department_id, course_number):
 	course = department_id + ' ' + course_number
 
-	# Get a list of departments from database
+	# Get a list of departments (collections) from database
 	all_departments = mongo.db.collection_names()
 
 	# Check if input is valid
@@ -81,7 +83,6 @@ def is_input_valid(department_id, course_number):
 		if result == None:
 			return False 
 		return True
-
 
 if __name__ == '__main__':
   app.run(debug=True)
