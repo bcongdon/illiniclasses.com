@@ -62,8 +62,11 @@ def review_page(course):
 				course = department_id + ' ' + course_number
 				get_course = mongo.db[str(department_id)].find_one({'course_id': course})
 				description = get_course['course_description']
-				#description = get_course['course_description']
-				return render_template('review.html', foo=course, des=description, form=review_form)
+				department_db = mongo.db[department_id]
+				course_obj = department_db.find_one({"course_id" : course})
+				reviews_list = course_obj["reviews"]
+				# print reviews
+				return render_template('review.html', foo=course, reviews=reviews_list,redes=description, form=review_form)
 			else:
 				return redirect(url_for('index'))
 
@@ -79,7 +82,7 @@ def is_input_valid(department_id, course_number):
 		return False
 	else:
 		result = mongo.db[str(department_id)].find_one({'course_id': course})
-		print result
+		# print result
 		if result == None:
 			return False 
 		return True
