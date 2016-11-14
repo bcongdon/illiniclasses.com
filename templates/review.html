@@ -36,5 +36,18 @@
 		</div>
 	</div>
 </div>
+{% for review_i in reviews %}
+<div class="row">
+	<div class="col-md-2"></div>
+	<div class="col-lg-8">
+		<blockquote>
+			<p>
+				{{ review_i.review }}
+			</p>
+		</blockquote>
+	</div>
+	<div class="col-md-2"></div>
+</div>
+{% endfor %}
 </body>
 </html>

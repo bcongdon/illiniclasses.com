@@ -66,7 +66,7 @@ def review_page(course):
 				course_obj = department_db.find_one({"course_id" : course})
 				reviews_list = course_obj["reviews"]
 				# print reviews
-				return render_template('review.html', foo=course, reviews=reviews_list,redes=description, form=review_form)
+				return render_template('review.html', foo=course, reviews=reviews_list, des=description, form=review_form)
 			else:
 				return redirect(url_for('index'))
 
