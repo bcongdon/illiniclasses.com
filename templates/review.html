@@ -6,30 +6,34 @@
 	<link rel='stylesheet' type='text/css' href='../static/css/styles.css'> 
 </head>
 <body>
-<div class='row'>
-	<div class='col-lg-12'>
-	<div>
-		<div  id='header'>
-			{{ foo }}
-		</div>
-		<div class='well'>
-			{{ des }}
+<div class='container-fluid'>
+	<div class='row header well'>
+		<div>
+			<div id='course-name'>
+				{{ foo }}
+			</div>
+			<div id='description'>
+				{{ des }}
+			</div>
 		</div>
 	</div>
-		<form method='POST'>
-		{{ form.hidden_tag() }}
+</div>
+<div class='container'>
+		<div>
+			<form method='POST'>
+			{{ form.hidden_tag() }}
+				<div>
+					{{ form.review(rows='3', class='form-control', placeholder="Write your review here...") }}
+				</div>
 
-			<div>
-				{{ form.review}}
-			</div>
-			<div>
-				{{ form.tip}}
-			</div>
-
-			<div>
-				{{ form.submit(class='btn-primary')}}
-			</div>
-		</form>
+				<div class='input-group'>
+					{{ form.hours(class='form-control') }}
+					<span class='input-group-btn'>
+						{{ form.submit(class='pull-right btn btn-success')}}
+					</span>
+				</div>
+			</form>
+		</div>
 	</div>
 </div>
 </body>
