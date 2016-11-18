@@ -49,7 +49,11 @@ def review_page(course):
 		search_form = SearchBar()
 
 		if request.method == 'POST':
-			return 'test'
+			
+			# Check if all input fields are entered correctly
+			if review_form.validate_on_submit() == False:
+				return "invalid input"
+			return "success"
 		elif request.method == 'GET':
 			# Convert to uppercase and remove white spaces
 			course = course.upper().replace(" ", "")

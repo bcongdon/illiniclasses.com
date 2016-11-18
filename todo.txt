@@ -1,0 +1,6 @@
+1. Validate review inputs
+2. Get input time
+3. Update inputs to the database
+4. Calculate average hours
+5. Display reviews and average hours to review.html
+6. Stylize review.html and index.html

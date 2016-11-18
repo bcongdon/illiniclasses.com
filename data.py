@@ -1,15 +1,15 @@
 from flask_wtf import Form 
 from wtforms import StringField, SubmitField, SelectField
 from wtforms.widgets import TextArea
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Length
 
 
 class SearchBar(Form):
-	course_name = StringField('Enter a course...', validators=[DataRequired()])
+	course_name = StringField('Enter a course...', validators=[DataRequired(), Length(min=5)])
 	submit = SubmitField('Search')
 
 class CourseData(Form):
-	review = StringField(widget=TextArea(), validators=[DataRequired()])
+	review = StringField(widget=TextArea(), validators=[DataRequired(), Length(min=100)])
 	hours = SelectField(
         'Number of hours',
         choices=[('question', 'How many hours did you have to work for this class?'), 
