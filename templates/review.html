@@ -6,7 +6,8 @@
 	<link rel='stylesheet' type='text/css' href='../static/css/styles.css'> 
 </head>
 <body>
-<div class='container-fluid'>
+<div class='container'>
+	<div>
 	<div class='row header well'>
 		<div>
 			<div id='course-name'>
@@ -17,37 +18,35 @@
 			</div>
 		</div>
 	</div>
-</div>
-<div class='container'>
-		<div>
-			<form method='POST'>
-			{{ form.hidden_tag() }}
-				<div>
-					{{ form.review(rows='3', class='form-control', placeholder="Write your review here...") }}
-				</div>
+		<form method='POST'>
+		{{ form.hidden_tag() }}
+			<div>
+				{{ form.review(rows='3', class='form-control', placeholder="Write your review here...") }}
+			</div>
 
-				<div class='input-group'>
-					{{ form.hours(class='form-control') }}
-					<span class='input-group-btn'>
-						{{ form.submit(class='pull-right btn btn-success')}}
-					</span>
-				</div>
-			</form>
-		</div>
+			<div class='input-group'>
+				{{ form.hours(class='form-control') }}
+				<span class='input-group-btn'>
+					{{ form.submit(class='pull-right btn btn-success')}}
+				</span>
+			</div>
+		</form>
+	</div>
+	<div id='review-start'></div>
+	<div>
+	{% for review_i in reviews %}
+
+		<i>{{ review_i.time }}</i>
+		</br>
+	<blockquote>
+		<p>
+			{{ review_i.review }}
+			</br>
+			<p><strong>Workload per week:</strong> {{ review_i.hours }}</p> 
+		</p>
+	</blockquote>
+	{% endfor %}
 	</div>
 </div>
-{% for review_i in reviews %}
-<div class="row">
-	<div class="col-md-2"></div>
-	<div class="col-lg-8">
-		<blockquote>
-			<p>
-				{{ review_i.review }}
-			</p>
-		</blockquote>
-	</div>
-	<div class="col-md-2"></div>
-</div>
-{% endfor %}
 </body>
 </html>

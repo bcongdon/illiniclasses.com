@@ -7,6 +7,7 @@ from xmljson import badgerfish as bf
 from xml.etree.ElementTree import fromstring
 from json import dumps
 from setup import update
+import time 
 
 
 app = Flask(__name__)
@@ -25,9 +26,10 @@ def index():
 		return render_template('index.html', form=search_form)
 
 	elif request.method == 'POST':
-		
+	
 		# Input from search bar
 		user_input = search_form.course_name.data
+
 		# Convert to uppercase and remove white spaces
 		user_input = user_input.upper().replace(" ", "")
 		# Get department id (e.g. CS) and course number in form of strings
@@ -37,42 +39,45 @@ def index():
 		if is_input_valid(department_id, course_number) == True:
 			return redirect(url_for('review_page', course=department_id+course_number))
 		else:
-			#return render_template('index.html', form=search_form)
 			return redirect(url_for('index'))
 
 @app.route('/<course>', methods=['GET', 'POST'])
 def review_page(course):
-		# Check to see if course is in the database
-		# If yes, return the page
-		# If not, return a 404
-		review_form = CourseData()
-		search_form = SearchBar()
+	'''
+	Check to see if course is in the database
+	If yes, return the page
+	If not, return a 404
+	'''
+	review_form = CourseData()
+	search_form = SearchBar()
+	
+	# Convert to uppercase and remove white spaces
+	course = course.upper().replace(" ", "")
+	# Get department id (e.g. CS) and course number in form of strings
+	department_id = ''.join([char for char in course if char.isdigit() != True])
+	course_number = ''.join([char for char in course if char.isdigit() == True])
 
-		if request.method == 'POST':
-			
-			# Check if all input fields are entered correctly
-			if review_form.validate_on_submit() == False:
-				return "invalid input"
-			return "success"
-		elif request.method == 'GET':
-			# Convert to uppercase and remove white spaces
-			course = course.upper().replace(" ", "")
-			# Get department id (e.g. CS) and course number in form of strings
-			department_id = ''.join([char for char in course if char.isdigit() != True])
-			course_number = ''.join([char for char in course if char.isdigit() == True])
+	if request.method == 'POST':
+		# Check if all input fields are entered correctly
+		if review_form.validate_on_submit() == False:
+			return "invalid input"
+		else:
+			current_time = time.localtime(time.time()) 
+			current_time = str(current_time.tm_mon) + "/" + str(current_time.tm_mday) + "/" + str(current_time.tm_year)
+			insert_review(review_form.review.data, review_form.hours.data, current_time)
+			return "submitted"
+	elif request.method == 'GET':
 
-			if is_input_valid(department_id, course_number):
-				# Get description from database
-				course = department_id + ' ' + course_number
-				get_course = mongo.db[str(department_id)].find_one({'course_id': course})
-				description = get_course['course_description']
-				department_db = mongo.db[department_id]
-				course_obj = department_db.find_one({"course_id" : course})
-				reviews_list = course_obj["reviews"]
-				# print reviews
-				return render_template('review.html', foo=course, reviews=reviews_list, des=description, form=review_form)
-			else:
-				return redirect(url_for('index'))
+		if is_input_valid(department_id, course_number):
+			# Get description from database
+			course = department_id + ' ' + course_number
+			get_course = mongo.db[department_id].find_one({'course_id': course})
+			description = get_course['course_description']
+			reviews_list = get_course["reviews"]
+
+			return render_template('review.html', foo=course, reviews=reviews_list, des=description, form=review_form)
+		else:
+			return redirect(url_for('index'))
 
 # Check to see if a course input is valid
 def is_input_valid(department_id, course_number):
@@ -85,11 +90,16 @@ def is_input_valid(department_id, course_number):
 	if department_id not in all_departments:
 		return False
 	else:
-		result = mongo.db[str(department_id)].find_one({'course_id': course})
-		# print result
+		result = mongo.db[department_id].find_one({'course_id': course})
 		if result == None:
 			return False 
 		return True
+
+# Insert new reviews to the database
+def insert_review(review, hours, current_time):
+	review_dict = {'hours': hours, 'review': review, 'time': current_time}
+	print "REVIEW!!!", review_dict
+	mongo.db['CS'].update({'course_id:': 'CS 225'}, {'$push': {'reviews:': review_dict}}, safe=True)
 
 if __name__ == '__main__':
   app.run(debug=True)

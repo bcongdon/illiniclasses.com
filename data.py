@@ -12,8 +12,8 @@ class CourseData(Form):
 	review = StringField(widget=TextArea(), validators=[DataRequired(), Length(min=100)])
 	hours = SelectField(
         'Number of hours',
-        choices=[('question', 'How many hours did you have to work for this class?'), 
-        ('below-3', 'Below 3'), ('3to6', '3-6'), ('7to10', '7-10'), ('11to14', '11 to 14'),
-        ('15to18', '15 to 18'), ('nolife', "I didn't have a life")], validators=[DataRequired()]
+        choices=[('question', 'Did you have a life? (workload per week)'), 
+        ('below-3', 'Below 3 hours'), ('3to6', '3 to 6 hours'), ('7to10', '7 to 10 hours'), ('11to14', '11 to 14 hours'),
+        ('15to18', '15 to 18 hours'), ('nolife', "I didn't have a life")], validators=[DataRequired()]
     )
 	submit = SubmitField('Submit')
