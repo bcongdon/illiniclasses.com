@@ -1,5 +1,4 @@
 from flask import Flask, flash, render_template, request, url_for, redirect
-from flask_wtf import Form 
 from data import SearchBar, CourseData
 from flask_pymongo import PyMongo
 from db_credential import db_name, db_uri
