@@ -8,7 +8,7 @@
 <body>
 <div class='container'>
 	<div>
-	<div class='row header well'>
+	<div class='header well'>
 		<div>
 			<div id='course-name'>
 				{{ foo }}
@@ -34,18 +34,22 @@
 	</div>
 	<div id='review-start'></div>
 	<div>
-	{% for review_i in reviews %}
+	{% if reviews|length == 0 %}
+		<p> No reviews for this course yet :( </p>
+	{% else %}
+		{% for review_i in reviews %}
 
-		<i>{{ review_i.time }}</i>
-		</br>
-	<blockquote>
-		<p>
-			{{ review_i.review }}
+			<i>{{ review_i.time }}</i>
 			</br>
-			<p><strong>Workload per week:</strong> {{ review_i.hours }}</p> 
-		</p>
-	</blockquote>
-	{% endfor %}
+		<blockquote>
+			<p>
+				{{ review_i.review }}
+				</br>
+				<p><strong>Workload per week:</strong> {{ review_i.hours }}</p> 
+			</p>
+		</blockquote>
+		{% endfor %}
+	{% endif %}
 	</div>
 </div>
 </body>

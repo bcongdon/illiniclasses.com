@@ -1,5 +1,5 @@
 body {
-	background: url('https://admissions.illinois.edu/Content/images/photo-tour/quad_main.jpg');
+	background: url('../img/quad.jpg');
 	background-repeat: no-repeat;
     background-size: 100% 100%;
 }

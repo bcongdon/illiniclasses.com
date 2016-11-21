@@ -56,6 +56,7 @@ def review_page(course):
 	# Get department id (e.g. CS) and course number in form of strings
 	department_id = ''.join([char for char in course if char.isdigit() != True])
 	course_number = ''.join([char for char in course if char.isdigit() == True])
+	course = department_id + ' ' + course_number
 
 	if request.method == 'POST':
 		# Check if all input fields are entered correctly
@@ -64,16 +65,17 @@ def review_page(course):
 		else:
 			current_time = time.localtime(time.time()) 
 			current_time = str(current_time.tm_mon) + "/" + str(current_time.tm_mday) + "/" + str(current_time.tm_year)
-			insert_review(review_form.review.data, review_form.hours.data, current_time)
+			insert_review(department_id, course, review_form.review.data, review_form.hours.data, current_time)
 			return "submitted"
 	elif request.method == 'GET':
 
 		if is_input_valid(department_id, course_number):
-			# Get description from database
-			course = department_id + ' ' + course_number
 			get_course = mongo.db[department_id].find_one({'course_id': course})
 			description = get_course['course_description']
-			reviews_list = get_course["reviews"]
+			if 'reviews' in get_course:
+				reviews_list = get_course['reviews']
+			else:
+				reviews_list = {}
 
 			return render_template('review.html', foo=course, reviews=reviews_list, des=description, form=review_form)
 		else:
@@ -96,11 +98,28 @@ def is_input_valid(department_id, course_number):
 		return True
 
 # Insert new reviews to the database
-def insert_review(review, hours, current_time):
+def insert_review(department_id, course, review, hours, current_time):
+	'''
+	Get the reviews from the current course, append new review to the list,
+	delete the current course, and insert a new one (with the new review)
+	'''
 	review_dict = {'hours': hours, 'review': review, 'time': current_time}
-	print "REVIEW!!!", review_dict
-	mongo.db['CS'].update({'course_id:': 'CS 225'}, {'$push': {'reviews:': review_dict}}, safe=True)
+	department = mongo.db[department_id]
+	current_course = department.find_one({'course_id': course})
+	if 'reviews' in current_course:
+		new_reviews = current_course['reviews']
+	else:
+		new_reviews = []
+	new_reviews.append(review_dict)
+	review_list = {'course_id': current_course['course_id'], 'course_description': current_course['course_description'], 
+	'course_name': current_course['course_name'], 'reviews': new_reviews}
+	department.delete_one({'course_id': course})
+	department.insert(review_list)
 
+	'''
+	Not working yet :( Would improve efficiency significantly 
+	department.update_one({'course_id:': 'CS 225'}, {'$push': {'reviews:': review_dict}})
+	'''
 if __name__ == '__main__':
   app.run(debug=True)
 
