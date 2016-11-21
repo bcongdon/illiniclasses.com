@@ -72,14 +72,16 @@ def review_page(course):
 		if is_input_valid(department_id, course_number):
 			get_course = mongo.db[department_id].find_one({'course_id': course})
 			description = get_course['course_description']
+			avg_color = 'N/A'
 			if 'reviews' in get_course:
 				reviews_list = get_course['reviews']
+				avg_color = get_workload_color(get_course['avg_hours'])
 			else:
 				reviews_list = {}
 				get_course['avg_hours'] = 'N/A'
-
+			
 			return render_template('review.html', course_name=course, avg_hours=get_course['avg_hours'], 
-				reviews=reviews_list, des=description, form=review_form)
+				avg_color=avg_color, reviews=reviews_list, des=description, form=review_form)
 		else:
 			return redirect(url_for('index'))
 
@@ -114,8 +116,9 @@ def insert_review(department_id, course, review, hours, current_time):
 		current_course['reviews'] = []
 		new_reviews = []
 
-	avg_hours = calc_average_workload(hours, current_course['avg_hours'], len(current_course['reviews']))
-	review_dict = {'hours': hours, 'review': review, 'time': current_time}
+	avg_hours = get_average_workload(hours, current_course['avg_hours'], len(current_course['reviews']))
+	color = get_workload_color(get_workload(hours))
+	review_dict = {'hours': hours, 'review': review, 'time': current_time, 'color': color}
 	new_reviews.append(review_dict)
 	review_list = {'course_id': current_course['course_id'], 'course_description': current_course['course_description'], 
 	'course_name': current_course['course_name'], 'avg_hours': avg_hours, 'reviews': new_reviews}
@@ -127,11 +130,21 @@ def insert_review(department_id, course, review, hours, current_time):
 	department.update_one({'course_id:': 'CS 225'}, {'$push': {'reviews:': review_dict}})
 	'''
 
-# Calculate average workload per week
-def calc_average_workload(workload_str, avg_workload, num_reviews):
+# Parse workload from workload selectfield
+def get_workload(workload_str):
 	workload_dict = {'Below 3 hours': 1.5, '3 to 6 hours': 4.5, '7 to 10 hours': 8.5, 
 	'11 to 14 hours': 12.5, '15 to 18 hours': 16.5, "I didn't have a life": 22.5}
-	return (avg_workload + workload_dict[workload_str])/(num_reviews + 1)
+	return workload_dict[workload_str]
+
+# Calculate average workload per week
+def get_average_workload(workload_str, avg_workload, num_reviews):
+	return (avg_workload + get_workload(workload_str))/(num_reviews + 1)
+
+# Choose a color for workload based on number of hours	
+def get_workload_color(workload):
+	workload_dict = {1.5: 'btn btn-info', 4.5: 'btn btn-info', 8.5: 'btn btn-primary', 
+	12.5: 'btn btn-warning', 16.5: 'btn btn-danger', 22.5: 'btn btn-danger'}
+	return workload_dict[workload]
 
 if __name__ == '__main__':
   app.run(debug=True)

@@ -16,9 +16,24 @@
 			</div>
 
 				<p><h7 class='btn btn-success'><strong>Average workload per week:</strong></h7>
-				<h7 class='btn btn-warning'>
+				
+				{% if avg_color == 'btn btn-info' %}
+				<h7 class='btn btn-info'>
 					{{ avg_hours }} hours
 				</h7></p> 
+				{% elif avg_color == 'btn btn-primary' %}
+				<h7 class='btn btn-primary'>
+					{{ avg_hours }} hours
+				</h7></p>
+				{% elif avg_color == 'btn btn-warning' %}
+				<h7 class='btn btn-warning'>
+					{{ avg_hours }} hours
+				</h7></p>
+				{% else %}
+				<h7 class='btn btn-danger'>
+					{{ avg_hours }} hours
+				</h7></p>
+				{% endif %}
 
 			<div id='description'>
 				{{ des }}
@@ -52,7 +67,25 @@
 			<p>
 				{{ review_i.review }}
 				</br>
-				<p><h7 class='btn btn-success'><strong>Workload per week:</strong></h7><h7 class='btn btn-warning'>{{ review_i.hours }}</h7></p> 
+				<p><h7 class='btn btn-success'><strong>Workload per week:</strong></h7>
+				{% if review_i.color == 'btn btn-info' %}
+				<h7 class='btn btn-info'>
+					{{ review_i.hours }} hours
+				</h7></p> 
+				{% elif review_i.color == 'btn btn-primary' %}
+				<h7 class='btn btn-primary'>
+					{{ review_i.hours }} hours
+				</h7></p>
+				{% elif review_i.color == 'btn btn-warning' %}
+				<h7 class='btn btn-warning'>
+					{{ review_i.hours }} hours
+				</h7></p>
+				{% else %}
+				<h7 class='btn btn-danger'>
+					{{ review_i.hours }} hours
+				</h7></p>
+				{% endif %}
+				</p> 
 			</p>
 		</blockquote>
 		{% endfor %}
