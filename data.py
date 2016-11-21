@@ -9,11 +9,11 @@ class SearchBar(Form):
 	submit = SubmitField('Search')
 
 class CourseData(Form):
-	review = StringField(widget=TextArea(), validators=[DataRequired(), Length(min=100)])
+	review = StringField(widget=TextArea(), validators=[DataRequired(), Length(min=50)])
 	hours = SelectField(
         'Number of hours',
         choices=[('question', 'Did you have a life? (workload per week)'), 
-        ('below-3', 'Below 3 hours'), ('3to6', '3 to 6 hours'), ('7to10', '7 to 10 hours'), ('11to14', '11 to 14 hours'),
-        ('15to18', '15 to 18 hours'), ('nolife', "I didn't have a life")], validators=[DataRequired()]
+        ('Below 3 hours', 'Below 3 hours'), ('3 to 6 hours', '3 to 6 hours'), ('7 to 10 hours', '7 to 10 hours'), ('11 to 14 hours', '11 to 14 hours'),
+        ('15 to 18 hours', '15 to 18 hours'), ("I didn't have a life", "I didn't have a life")], validators=[DataRequired()]
     )
 	submit = SubmitField('Submit')

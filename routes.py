@@ -76,8 +76,10 @@ def review_page(course):
 				reviews_list = get_course['reviews']
 			else:
 				reviews_list = {}
+				get_course['avg_hours'] = 'N/A'
 
-			return render_template('review.html', foo=course, reviews=reviews_list, des=description, form=review_form)
+			return render_template('review.html', course_name=course, avg_hours=get_course['avg_hours'], 
+				reviews=reviews_list, des=description, form=review_form)
 		else:
 			return redirect(url_for('index'))
 
@@ -103,16 +105,20 @@ def insert_review(department_id, course, review, hours, current_time):
 	Get the reviews from the current course, append new review to the list,
 	delete the current course, and insert a new one (with the new review)
 	'''
-	review_dict = {'hours': hours, 'review': review, 'time': current_time}
 	department = mongo.db[department_id]
 	current_course = department.find_one({'course_id': course})
 	if 'reviews' in current_course:
 		new_reviews = current_course['reviews']
 	else:
+		current_course['avg_hours'] = 0
+		current_course['reviews'] = []
 		new_reviews = []
+
+	avg_hours = calc_average_workload(hours, current_course['avg_hours'], len(current_course['reviews']))
+	review_dict = {'hours': hours, 'review': review, 'time': current_time}
 	new_reviews.append(review_dict)
 	review_list = {'course_id': current_course['course_id'], 'course_description': current_course['course_description'], 
-	'course_name': current_course['course_name'], 'reviews': new_reviews}
+	'course_name': current_course['course_name'], 'avg_hours': avg_hours, 'reviews': new_reviews}
 	department.delete_one({'course_id': course})
 	department.insert(review_list)
 
@@ -120,6 +126,13 @@ def insert_review(department_id, course, review, hours, current_time):
 	Not working yet :( Would improve efficiency significantly 
 	department.update_one({'course_id:': 'CS 225'}, {'$push': {'reviews:': review_dict}})
 	'''
+
+# Calculate average workload per week
+def calc_average_workload(workload_str, avg_workload, num_reviews):
+	workload_dict = {'Below 3 hours': 1.5, '3 to 6 hours': 4.5, '7 to 10 hours': 8.5, 
+	'11 to 14 hours': 12.5, '15 to 18 hours': 16.5, "I didn't have a life": 22.5}
+	return (avg_workload + workload_dict[workload_str])/(num_reviews + 1)
+
 if __name__ == '__main__':
   app.run(debug=True)
 
