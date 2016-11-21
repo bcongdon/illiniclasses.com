@@ -9,7 +9,7 @@ class SearchBar(Form):
 	submit = SubmitField('Search')
 
 class CourseData(Form):
-	review = StringField(widget=TextArea(), validators=[DataRequired(), Length(min=50)])
+	review = StringField(widget=TextArea(), validators=[DataRequired(), Length(min=10)])
 	hours = SelectField(
         'Number of hours',
         choices=[('question', 'Did you have a life? (workload per week)'), 

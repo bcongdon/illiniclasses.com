@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, flash, render_template, request, url_for, redirect
 from data import SearchBar, CourseData
 from flask.ext.pymongo import PyMongo
 from db_credential import db_name, db_uri
@@ -7,7 +7,7 @@ from xmljson import badgerfish as bf
 from xml.etree.ElementTree import fromstring
 from json import dumps
 from setup import update
-import time 
+import time  
 
 
 app = Flask(__name__)
@@ -61,14 +61,14 @@ def review_page(course):
 	if request.method == 'POST':
 		# Check if all input fields are entered correctly
 		if review_form.validate_on_submit() == False:
-			return "invalid input"
+			return redirect(url_for('review_page', course=course))
 		else:
 			current_time = time.localtime(time.time()) 
 			current_time = str(current_time.tm_mon) + "/" + str(current_time.tm_mday) + "/" + str(current_time.tm_year)
 			insert_review(department_id, course, review_form.review.data, review_form.hours.data, current_time)
-			return "submitted"
-	elif request.method == 'GET':
+			return redirect(url_for('review_page', course=course))
 
+	elif request.method == 'GET':
 		if is_input_valid(department_id, course_number):
 			get_course = mongo.db[department_id].find_one({'course_id': course})
 			description = get_course['course_description']

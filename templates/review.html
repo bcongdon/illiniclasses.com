@@ -57,7 +57,10 @@
 	<div id='review-start'></div>
 	<div>
 	{% if reviews|length == 0 %}
-		<p> No reviews for this course yet :( </p>
+		<blockquote>
+			<p> No reviews for this course yet :( </p>
+			<p>If you have taken this course, please consider contributing by submitting a review :) </p>
+		</blockquote>
 	{% else %}
 		{% for review_i in reviews %}
 
