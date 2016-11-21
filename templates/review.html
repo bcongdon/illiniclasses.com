@@ -4,7 +4,7 @@
 	<title>Review Page</title>
 	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 	<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
-	<link rel='stylesheet' type='text/css' href='../static/css/styles.css'> 
+	<link rel='stylesheet' type='text/css' href='../static/css/review-styles.css'> 
 </head>
 <body>
 <div class='container'>
@@ -12,7 +12,10 @@
 	<div class='header well'>
 		<div>
 			<div id='course-name'>
-				{{ course_name }}
+			<b>
+				{{ course.course_id }}
+				{{ course.course_name }}
+			</b>
 			</div>
 
 				<p><h7 class='btn btn-success'><strong>Average workload per week:</strong></h7>

@@ -1,12 +1,12 @@
 from flask import Flask, flash, render_template, request, url_for, redirect
 from data import SearchBar, CourseData
-from flask.ext.pymongo import PyMongo
+from flask_pymongo import PyMongo
 from db_credential import db_name, db_uri
 import requests
 from xmljson import badgerfish as bf
 from xml.etree.ElementTree import fromstring
 from json import dumps
-from setup import update
+# from database_setup import update 	# use to update db
 import time  
 
 
@@ -80,7 +80,7 @@ def review_page(course):
 				reviews_list = {}
 				get_course['avg_hours'] = 'N/A'
 			
-			return render_template('review.html', course_name=course, avg_hours=get_course['avg_hours'], 
+			return render_template('review.html', course=get_course, avg_hours=get_course['avg_hours'], 
 				avg_color=avg_color, reviews=reviews_list, des=description, form=review_form)
 		else:
 			return redirect(url_for('index'))
@@ -124,6 +124,11 @@ def insert_review(department_id, course, review, hours, current_time):
 	'course_name': current_course['course_name'], 'avg_hours': avg_hours, 'reviews': new_reviews}
 	department.delete_one({'course_id': course})
 	department.insert(review_list)
+
+	'''
+	Insert to log db to keep track of all reviews
+	'''
+	mongo.db['LOG'].insert({'course': course, 'review': review, 'time': current_time})
 
 	'''
 	Not working yet :( Would improve efficiency significantly 

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, url_for, redirect
 from data import SearchBar, CourseData
-from flask.ext.pymongo import PyMongo
+from flask_pymongo import PyMongo
 from db_credential import db_name, db_uri
 import requests
 from xmljson import badgerfish as bf
@@ -8,7 +8,7 @@ from xml.etree.ElementTree import fromstring
 from json import dumps
 # from json import loads
 # import datetime
-from setup_helper import get_all_departments, get_all_courses, get_a_course
+from database_setup_helper import get_all_departments, get_all_courses, get_a_course
 
 def update():
 	app = Flask(__name__)
@@ -28,7 +28,7 @@ def update():
 	# in MongoDB
 	for each_department in all_departments_arr:
 		department_id = each_department['@id']			# e.g. CS
-
+		
 		# Create a new collection for each department if
 		# it's not already there
 		if department_id in all_collections:

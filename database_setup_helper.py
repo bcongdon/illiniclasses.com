@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, url_for, redirect
 from data import SearchBar, CourseData
-from flask.ext.pymongo import PyMongo
+from flask_pymongo import PyMongo
 from db_credential import db_name, db_uri
 import requests
 from xmljson import badgerfish as bf
