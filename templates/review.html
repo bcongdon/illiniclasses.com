@@ -1,102 +1,111 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>Review Page</title>
-	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-	<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
-	<link rel='stylesheet' type='text/css' href='../static/css/review-styles.css'> 
+    <title>Review Page</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+    <link rel='stylesheet' type='text/css' href='../static/css/review-styles.css'>
 </head>
+
 <body>
-<div class='container'>
-	<div>
-	<div class='header well'>
-		<div>
-			<div id='course-name'>
-			<p>
-				{{ course.course_id }}
-				{{ course.course_name }}
-			</p>
-			</div>
-
-				<p><h7 class='btn btn-success'><strong>Average workload per week:</strong></h7>
-				
-				{% if avg_color == 'btn btn-info' %}
-				<h7 class='btn btn-info'>
-					{{ avg_hours }} hours
-				</h7></p> 
-				{% elif avg_color == 'btn btn-primary' %}
-				<h7 class='btn btn-primary'>
-					{{ avg_hours }} hours
-				</h7></p>
-				{% elif avg_color == 'btn btn-warning' %}
-				<h7 class='btn btn-warning'>
-					{{ avg_hours }} hours
-				</h7></p>
-				{% else %}
-				<h7 class='btn btn-danger'>
-					{{ avg_hours }} hours
-				</h7></p>
-				{% endif %}
-
-			<div id='description'>
-				{{ des }}
-			</div>
-		</div>
-	</div>
-		<form method='POST'>
-		{{ form.hidden_tag() }}
-			<div>
-				{{ form.review(rows='3', class='form-control', placeholder="Write your review here...") }}
-			</div>
-
-			<div class='input-group'>
-				{{ form.hours(class='form-control') }}
-				<span class='input-group-btn'>
-					{{ form.submit(class='pull-right btn btn-success')}}
-				</span>
-			</div>
-		</form>
-	</div>
-	<div id='review-start'></div>
-	<div>
-	{% if reviews|length == 0 %}
-		<blockquote>
-			<p> No reviews for this course yet :( </p>
-			<p>If you have taken this course, please consider contributing by submitting a review :) </p>
-		</blockquote>
-	{% else %}
-		{% for review_i in reviews %}
-
-			<i>{{ review_i.time }}</i>
-			</br>
-		<blockquote>
-			<p>
-				{{ review_i.review }}
-				</br>
-				<p><h7 class='btn btn-success'><strong>Workload per week:</strong></h7>
-				{% if review_i.color == 'btn btn-info' %}
-				<h7 class='btn btn-info'>
-					{{ review_i.hours }} hours
-				</h7></p> 
-				{% elif review_i.color == 'btn btn-primary' %}
-				<h7 class='btn btn-primary'>
-					{{ review_i.hours }} hours
-				</h7></p>
-				{% elif review_i.color == 'btn btn-warning' %}
-				<h7 class='btn btn-warning'>
-					{{ review_i.hours }} hours
-				</h7></p>
-				{% else %}
-				<h7 class='btn btn-danger'>
-					{{ review_i.hours }} hours
-				</h7></p>
-				{% endif %}
-				</p> 
-			</p>
-		</blockquote>
-		{% endfor %}
-	{% endif %}
-	</div>
-</div>
+    <div class='row'>
+        <div class='col-lg-1 col-md-1 col-sm-0 col-xs-0'></div>
+        <div class='col-lg-10 col-md-10 col-sm-12 col-xs-12'>
+            <div class='header well'>
+                <div>
+                    <div id='course-name'>
+                        <p>
+                            {{ course.course_id }} {{ course.course_name }}
+                        </p>
+                    </div>
+                    <p>
+                        <h7 class='btn btn-success'><strong>Average workload per week:</strong></h7>
+                        {% if avg_color == 'btn btn-info' %}
+                        <h7 class='btn btn-info'>
+                            {{ avg_hours }} hours
+                        </h7>
+                    </p>
+                    {% elif avg_color == 'btn btn-primary' %}
+                    <h7 class='btn btn-primary'>
+                        {{ avg_hours }} hours
+                    </h7>
+                    </p>
+                    {% elif avg_color == 'btn btn-warning' %}
+                    <h7 class='btn btn-warning'>
+                        {{ avg_hours }} hours
+                    </h7>
+                    </p>
+                    {% else %}
+                    <h7 class='btn btn-danger'>
+                        {{ avg_hours }} hours
+                    </h7>
+                    </p>
+                    {% endif %}
+                    <div id='description'>
+                        {{ des }}
+                    </div>
+                </div>
+            </div>
+            <div>
+                <form method='POST'>
+                    {{ form.hidden_tag() }}
+                    <div>
+                        {{ form.review(rows='3', class='form-control', placeholder="Write your review here...") }}
+                    </div>
+                    <div class='input-group'>
+                        {{ form.hours(class='form-control') }}
+                        <span class='input-group-btn'>
+                      {{ form.submit(class='pull-right btn btn-success')}}
+                      </span>
+                    </div>
+                </form>
+            </div>
+            <div id='review-start'></div>
+            <div>
+                {% if reviews|length == 0 %}
+                <blockquote>
+                    <p> No reviews for this course yet :( </p>
+                    <p>If you have taken this course, please consider contributing by submitting a review :) </p>
+                </blockquote>
+                {% else %} {% for review_i in reviews %}
+                <i>{{ review_i.time }}</i>
+                </br>
+                <blockquote>
+                    <p>
+                        {{ review_i.review }}
+                        </br>
+                        <p>
+                            <h7 class='btn btn-success'><strong>Workload per week:</strong></h7>
+                            {% if review_i.color == 'btn btn-info' %}
+                            <h7 class='btn btn-info'>
+                                {{ review_i.hours }} hours
+                            </h7>
+                        </p>
+                        {% elif review_i.color == 'btn btn-primary' %}
+                        <h7 class='btn btn-primary'>
+                            {{ review_i.hours }} hours
+                        </h7>
+                    </p>
+                    {% elif review_i.color == 'btn btn-warning' %}
+                    <h7 class='btn btn-warning'>
+                        {{ review_i.hours }} hours
+                    </h7>
+                    </p>
+                    {% else %}
+                    <h7 class='btn btn-danger'>
+                        {{ review_i.hours }} hours
+                    </h7>
+                    </p>
+                    {% endif %}
+                    </p>
+                    </p>
+                </blockquote>
+                {% endfor %} {% endif %}
+            </div>
+        </div>
+        <div class='col-lg-1 col-md-1 col-sm-0 col-xs-0'></div>
+    </div>
 </body>
+
 </html>

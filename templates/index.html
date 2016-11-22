@@ -1,35 +1,40 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>Illini Classes</title>
-	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-	<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
-	<link rel='stylesheet' type='text/css' href='../static/css/review-styles.css'>
-	<link rel='stylesheet' type='text/css' href='../static/css/index-styles.css'>  
-	<script src='/static/js/script.js'></script>
+    <title>Illini Classes</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+    <link rel='stylesheet' type='text/css' href='../static/css/review-styles.css'>
+    <link rel='stylesheet' type='text/css' href='../static/css/index-styles.css'>
+    <script src='/static/js/script.js'></script>
 </head>
+
 <body>
-<div class='container-fluid'>
-		<h6><i>"Enjoy!" - <a href='http://www.pitlv.me' target="_top">Phillip</a> and <a href='mailto:shanennn@gmail.com' target="_top">Shane</a></i></h6>
-		<div class='col-lg-3 col-md-3 col-sm-2 col-xs-1'> <!-- Dummy div -->
-		</div>
-		<div class='input-group col-lg-6 col-md-6 col-sm-8 col-xs-10'>
-			<h1 id='title'>Illini Classes</h1>
-			<h6 id='crowdsource'>... a crowdsourced course review by UIUC students, for UIUC students</h6>
-			<form method='POST'>
-			 <div id='search-bar' class='input-group col-md-12'>
-			 
-				{{ form.course_name(class='form-control', placeholder="Enter a class") }}
-				
-					<span class='input-group-btn' >
+    <div class='row'>
+        <h6><i>"Enjoy!" - <a href='http://www.pitlv.me' target="_top">Phillip</a> and <a href='mailto:shanennn@gmail.com' target="_top">Shane</a></i></h6>
+        <div class='col-lg-3 col-md-3 col-sm-2 col-xs-1'>
+            <!-- Dummy div -->
+        </div>
+        <div class='input-group col-lg-6 col-md-6 col-sm-8 col-xs-10'>
+            <h1 id='title'>Illini Classes</h1>
+            <h6 id='crowdsource'>... a crowdsourced course review by UIUC students, for UIUC students</h6>
+            <form method='POST'>
+                <div id='search-bar' class='input-group col-md-12'>
+
+                    {{ form.course_name(class='form-control', placeholder="Enter a class") }}
+
+                    <span class='input-group-btn'>
 						{{ form.submit(class='btn btn-success')}}
 					</span>
-			</div>
-			</form>
-		</div>
-		<div class='col-lg-3 col-md-3 col-sm-2 col-xs-1'> <!-- Dummy div -->
-		</div>
-	</div>
-</div>
+                </div>
+            </form>
+        </div>
+        <div class='col-lg-3 col-md-3 col-sm-2 col-xs-1'>
+            <!-- Dummy div -->
+        </div>
+    </div>
+    </div>
 </body>
+
 </html>
