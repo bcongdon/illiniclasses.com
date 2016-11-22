@@ -6,7 +6,7 @@ import requests
 from xmljson import badgerfish as bf
 from xml.etree.ElementTree import fromstring
 from json import dumps
-from database_setup import update 	# Use to update db
+# from database_setup import update 	# Use to update db
 import time  
 import os 								# For Heroku config vars
 
