@@ -1,7 +1,7 @@
 from flask import Flask, flash, render_template, request, url_for, redirect
 from data import SearchBar, CourseData
 from flask_pymongo import PyMongo
-#from db_credential import db_name, db_uri 	# For running locally (Heroku config vars for online)
+# from db_credential import db_name, db_uri 	# For running locally (Heroku config vars for online)
 import requests
 from xmljson import badgerfish as bf
 from xml.etree.ElementTree import fromstring
@@ -16,7 +16,7 @@ app = Flask(__name__)
 app.config['MONGO_DBNAME'] = os.environ.get('DB_NAME')
 app.config['MONGO_URI'] = os.environ.get('DB_URI')
 
-#For running locally
+# For running locally
 # app.config['MONGO_DBNAME'] = os.environ.get('DB_NAME', db_name)
 # app.config['MONGO_URI'] = os.environ.get('DB_URI', db_uri)
 
