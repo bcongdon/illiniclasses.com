@@ -1,7 +1,7 @@
 from flask import Flask, flash, render_template, request, url_for, redirect
 from data import SearchBar, CourseData
 from flask_pymongo import PyMongo
-# from db_credential import db_name, db_uri 	# For running locally (Heroku config vars for online)
+#from db_credential import db_name, db_uri 	# For running locally (Heroku config vars for online)
 import requests
 from xmljson import badgerfish as bf
 from xml.etree.ElementTree import fromstring
@@ -127,7 +127,8 @@ def insert_review(department_id, course, review, hours, current_time):
 	new_reviews.append(review_dict)
 	review_list = {'course_id': current_course['course_id'], 'course_description': current_course['course_description'], 
 	'course_name': current_course['course_name'], 'avg_hours': avg_hours, 'reviews': new_reviews}
-	department.delete_one({'course_id': course})
+	
+	department.remove({'course_id': course})
 	department.insert(review_list)
 
 	'''
