@@ -1,12 +1,12 @@
 from flask import Flask, flash, render_template, request, url_for, redirect
 from data import SearchBar, CourseData
 from flask_pymongo import PyMongo
-# from db_credential import db_name, db_uri 	# For running locally (Heroku config vars for online)
+from db_credential import db_name, db_uri 	# For running locally (Heroku config vars for online)
 import requests
 from xmljson import badgerfish as bf
 from xml.etree.ElementTree import fromstring
 from json import dumps
-# from database_setup import update 	# Use to update db
+from database_setup import update 	# Use to update db
 import time  
 import os 								# For Heroku config vars
 
@@ -64,14 +64,37 @@ def review_page(course):
 	course = department_id + ' ' + course_number
 
 	if request.method == 'POST':
-		# Check if all input fields are entered correctly
-		if review_form.validate_on_submit() == False:
-			return redirect(url_for('review_page', course=course))
+		'''
+		Search bar
+		'''
+		# Input from search bar
+		user_input = search_form.course_name.data
+
+		if len(user_input) > 0:
+			# Convert to uppercase and remove white spaces
+			user_input = user_input.upper().replace(" ", "")
+			# Get department id (e.g. CS) and course number in form of strings
+			department_id = ''.join([char for char in user_input if char.isdigit() != True])
+			course_number = ''.join([char for char in user_input if char.isdigit() == True])
+
+			if is_input_valid(department_id, course_number) == True:
+				return redirect(url_for('review_page', course=department_id+course_number))
+			else:
+				return redirect(url_for('review_page', course=course))
+
 		else:
-			current_time = time.localtime(time.time()) 
-			current_time = str(current_time.tm_mon) + "/" + str(current_time.tm_mday) + "/" + str(current_time.tm_year)
-			insert_review(department_id, course, review_form.review.data, review_form.hours.data, current_time)
-			return redirect(url_for('review_page', course=course))
+			# Check if all submission input fields are entered correctly
+			if review_form.validate_on_submit() == False:
+				return redirect(url_for('review_page', course=course))
+			else:
+
+				'''
+				Review submission form
+				'''
+				current_time = time.localtime(time.time()) 
+				current_time = str(current_time.tm_mon) + "/" + str(current_time.tm_mday) + "/" + str(current_time.tm_year)
+				insert_review(department_id, course, review_form.review.data, review_form.hours.data, current_time)
+				return redirect(url_for('review_page', course=course))
 
 	elif request.method == 'GET':
 		if is_input_valid(department_id, course_number):
