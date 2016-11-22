@@ -20,12 +20,12 @@
             <h1 id='title'>Illini Classes</h1>
             <h6 id='crowdsource'>... a crowdsourced course review by UIUC students, for UIUC students</h6>
             <form method='POST'>
-                <div id='search-bar' class='input-group col-md-12'>
+                <div id='search-bar' class='input-group'>
 
-                    {{ form.course_name(class='form-control', placeholder="Enter a class") }}
+                    {{ search_bar.course_name(class='form-control', placeholder="Enter a class") }}
 
                     <span class='input-group-btn'>
-						{{ form.submit(class='btn btn-success')}}
+						{{ search_bar.submit(class='btn btn-success')}}
 					</span>
                 </div>
             </form>

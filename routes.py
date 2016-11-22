@@ -1,7 +1,7 @@
 from flask import Flask, flash, render_template, request, url_for, redirect
 from data import SearchBar, CourseData
 from flask_pymongo import PyMongo
-#from db_credential import db_name, db_uri 	# For running locally (Heroku config vars for online)
+# from db_credential import db_name, db_uri 	# For running locally (Heroku config vars for online)
 import requests
 from xmljson import badgerfish as bf
 from xml.etree.ElementTree import fromstring
@@ -28,7 +28,7 @@ app.secret_key = 'development-key'
 def index():
 	search_form = SearchBar()
 	if request.method == 'GET':
-		return render_template('index.html', form=search_form)
+		return render_template('index.html', search_bar=search_form)
 
 	elif request.method == 'POST':
 	
@@ -85,7 +85,7 @@ def review_page(course):
 				reviews_list = {}
 				get_course['avg_hours'] = 'N/A'
 			
-			return render_template('review.html', course=get_course, avg_hours=get_course['avg_hours'], 
+			return render_template('review.html', search_bar=search_form, course=get_course, avg_hours=get_course['avg_hours'], 
 				avg_color=avg_color, reviews=reviews_list, des=description, form=review_form)
 		else:
 			return redirect(url_for('index'))
