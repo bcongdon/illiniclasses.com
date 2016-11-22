@@ -6,4 +6,6 @@
 // 6. Stylize review.html and index.html
 
 1. Include a search bar in review.html
-2. Display error message if possible
+2. Add config variables on Heroku
+3. Create a new collection to store statistics (number of searches, visits, etc.) 
+4. Display error message if possible

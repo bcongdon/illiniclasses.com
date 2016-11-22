@@ -6,14 +6,15 @@ import requests
 from xmljson import badgerfish as bf
 from xml.etree.ElementTree import fromstring
 from json import dumps
-# from database_setup import update 	# use to update db
+# from database_setup import update 	# Use to update db
 import time  
+import os 								# For Heroku config vars
 
 
 app = Flask(__name__)
 
-app.config['MONGO_DBNAME'] = db_name
-app.config['MONGO_URI'] = db_uri
+app.config['MONGO_DBNAME'] = os.environ.get('DB_NAME', db_name)
+app.config['MONGO_URI'] = os.environ.get('DB_URI', db_uri)
 
 mongo = PyMongo(app)
 
