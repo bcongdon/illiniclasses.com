@@ -1,2 +1,1 @@
-Under development
-testing
+http://www.illiniclasses.com
