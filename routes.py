@@ -178,7 +178,7 @@ def get_workload(workload_str):
 
 # Calculate average workload per week
 def get_average_workload(workload_str, avg_workload, num_reviews):
-	return (avg_workload * num_reviews + get_workload(workload_str))/(num_reviews + 1)
+	return round((avg_workload * num_reviews + get_workload(workload_str))/(num_reviews + 1), 2)
 
 # Choose a color for workload based on number of hours	
 def get_workload_color(workload):
