@@ -145,6 +145,8 @@ def insert_review(department_id, course, review, hours, current_time):
 		new_reviews = []
 
 	avg_hours = get_average_workload(hours, current_course['avg_hours'], len(current_course['reviews']))
+	print "Number of reviews", len(current_course['reviews'])
+
 	color = get_workload_color(get_workload(hours))
 	review_dict = {'hours': hours, 'review': review, 'time': current_time, 'color': color}
 	new_reviews.append(review_dict)
@@ -172,13 +174,20 @@ def get_workload(workload_str):
 
 # Calculate average workload per week
 def get_average_workload(workload_str, avg_workload, num_reviews):
-	return (avg_workload + get_workload(workload_str))/(num_reviews + 1)
+	return (avg_workload * num_reviews + get_workload(workload_str))/(num_reviews + 1)
 
 # Choose a color for workload based on number of hours	
 def get_workload_color(workload):
 	workload_dict = {1.5: 'btn btn-info', 4.5: 'btn btn-info', 8.5: 'btn btn-primary', 
 	12.5: 'btn btn-warning', 16.5: 'btn btn-danger', 22.5: 'btn btn-danger'}
-	return workload_dict[workload]
+	if workload <= 6:
+		return 'btn btn-info'
+	elif workload <= 10:
+		return 'btn btn-primary'
+	elif workload <= 14:
+		return 'btn btn-warning'
+	else:
+		return 'btn btn-danger'
 
 if __name__ == '__main__':
   app.run(debug=True)
