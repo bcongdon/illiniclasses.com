@@ -1,7 +1,7 @@
 from flask import Flask, flash, render_template, request, url_for, redirect
 from data import SearchBar, CourseData
 from flask_pymongo import PyMongo
-# from db_credential import db_name, db_uri 	# For running locally (Heroku config vars for online)
+from db_credential import db_name, db_uri 	# For running locally (Heroku config vars for online)
 import requests
 from xmljson import badgerfish as bf
 from xml.etree.ElementTree import fromstring
@@ -17,8 +17,8 @@ app.config['MONGO_DBNAME'] = os.environ.get('DB_NAME')
 app.config['MONGO_URI'] = os.environ.get('DB_URI')
 
 # For running locally
-# app.config['MONGO_DBNAME'] = os.environ.get('DB_NAME', db_name)
-# app.config['MONGO_URI'] = os.environ.get('DB_URI', db_uri)
+app.config['MONGO_DBNAME'] = os.environ.get('DB_NAME', db_name)
+app.config['MONGO_URI'] = os.environ.get('DB_URI', db_uri)
 
 mongo = PyMongo(app)
 
@@ -28,7 +28,8 @@ app.secret_key = 'development-key'
 def index():
 	search_form = SearchBar()
 	if request.method == 'GET':
-		return render_template('index.html', search_bar=search_form)
+		LOG = mongo.db['LOG']
+		return render_template('index.html', search_bar=search_form, num_reviews=LOG.count())
 
 	elif request.method == 'POST':
 	

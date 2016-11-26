@@ -16,3 +16,7 @@ html {
 #search-bar {
 	margin-top: 20px;
 }
+
+#num-reviews {
+	color: red;
+}
