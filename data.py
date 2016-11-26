@@ -9,7 +9,7 @@ class SearchBar(FlaskForm):
 	submit = SubmitField('Search')
 
 class CourseData(FlaskForm):
-	review = StringField(widget=TextArea(), validators=[DataRequired(), Length(min=10)])
+	review = StringField(widget=TextArea(), validators=[DataRequired(), Length(min=100)])
 	hours = SelectField(
         'Number of hours',
         choices=[('0', 'Did you have a life? (workload per week)'), 
