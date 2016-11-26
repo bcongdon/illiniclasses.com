@@ -98,6 +98,7 @@ def review_page(course):
 
 	elif request.method == 'GET':
 		if is_input_valid(department_id, course_number):
+			print "GOT A VISIT AT " + course
 			get_course = mongo.db[department_id].find_one({'course_id': course})
 			description = get_course['course_description']
 			avg_color = 'N/A'
@@ -145,7 +146,7 @@ def insert_review(department_id, course, review, hours, current_time):
 		new_reviews = []
 
 	avg_hours = get_average_workload(hours, current_course['avg_hours'], len(current_course['reviews']))
-	print "Number of reviews", len(current_course['reviews'])
+	# print "Number of reviews", len(current_course['reviews'])
 
 	color = get_workload_color(get_workload(hours))
 	review_dict = {'hours': hours, 'review': review, 'time': current_time, 'color': color}
@@ -161,6 +162,8 @@ def insert_review(department_id, course, review, hours, current_time):
 	'''
 	mongo.db['LOG'].insert({'course': course, 'review': review, 'time': current_time})
 
+	print "GOT A REVIEW FOR " + course
+
 	'''
 	Not working yet :( Would improve efficiency significantly 
 	department.update_one({'course_id:': 'CS 225'}, {'$push': {'reviews:': review_dict}})
@@ -168,7 +171,7 @@ def insert_review(department_id, course, review, hours, current_time):
 
 # Parse workload from workload selectfield
 def get_workload(workload_str):
-	workload_dict = {'Below 3 hours': 1.5, '3 to 6 hours': 4.5, '7 to 10 hours': 8.5, 
+	workload_dict = {'0': 0, 'Below 3 hours': 1.5, '3 to 6 hours': 4.5, '7 to 10 hours': 8.5, 
 	'11 to 14 hours': 12.5, '15 to 18 hours': 16.5, "I didn't have a life": 22.5}
 	return workload_dict[workload_str]
 
