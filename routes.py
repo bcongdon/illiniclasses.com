@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, url_for, redirect
+from flask import Flask, flash, render_template, request, url_for, redirect, jsonify
 from data import SearchBar, CourseData
 from flask_pymongo import PyMongo
 # from db_credential import db_name, db_uri 	# For running locally (Heroku config vars for online)
@@ -9,7 +9,7 @@ from json import dumps
 # from database_setup import update 	# Use to update db
 import time  
 import os 								# For Heroku config vars
-
+import course_id_cache
 
 app = Flask(__name__)
 
@@ -24,11 +24,16 @@ mongo = PyMongo(app)
 
 app.secret_key = 'development-key'
 
+@app.before_first_request
+def setup_course_cache():
+	course_id_cache.get_course_ids(mongo)
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
 	search_form = SearchBar()
 	if request.method == 'GET':
 		LOG = mongo.db['LOG']
+
 		return render_template('index.html', search_bar=search_form, num_reviews=LOG.count())
 
 	elif request.method == 'POST':
@@ -57,7 +62,7 @@ def review_page(course):
 	'''
 	review_form = CourseData()
 	search_form = SearchBar()
-	
+
 	# Convert to uppercase and remove white spaces
 	course = course.upper().replace(" ", "")
 	# Get department id (e.g. CS) and course number in form of strings
@@ -194,6 +199,12 @@ def get_workload_color(workload):
 		return 'btn btn-warning'
 	else:
 		return 'btn btn-danger'
+
+
+@app.route('/autocomplete', methods=['GET'])
+def autocomplete():
+	return jsonify(course_id_cache.get_course_ids(mongo))
+
 
 if __name__ == '__main__':
   app.run(debug=True)

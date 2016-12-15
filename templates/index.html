@@ -2,22 +2,28 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <meta name="description" content="A crowdsourced course review at UIUC">
-    <meta name="keywords" content="UIUC, U of I, Illinois, Course Review, CS 225, CS 374, ECE 391, CS electives, What courses to take">
-    <meta name="author" content="Phillip Le, Shane Neary">
-
+    {% include "head.html" %}
     <title>Illini Classes | A crowdsourced course review at UIUC</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
-    <link rel='stylesheet' type='text/css' href='../static/css/review-styles.css'>
-    <link rel='stylesheet' type='text/css' href='../static/css/index-styles.css'>
+    <script>
+    $(document).ready(function(){
+        $(function() {
+            $.ajax({
+                url: '{{ url_for("autocomplete") }}'
+                }).done(function (data) {
+                    console.log($('#searchbar'))
+                    $('#searchbar').autocomplete({
+                        source: data,
+                        minLength: 2
+                    });
+                });
+        });
+    });
+
+    </script>
 </head>
 
 <body>
+
     <div class='container-fluid'>
         <div class='row'>
             <h6><i>Contact: <a href='mailto:phule2@illinois.edu' target="_top">Phillip</a> or <a href='mailto:shanennn@gmail.com' target="_top">Shane</a></i></h6>

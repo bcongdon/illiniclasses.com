@@ -5,7 +5,8 @@ from wtforms.validators import DataRequired, Length
 
 
 class SearchBar(FlaskForm):
-	course_name = StringField('Enter a course, e.g. ECON 102	', validators=[DataRequired(), Length(min=5)])
+	course_name = StringField('Enter a course, e.g. ECON 102	', validators=[DataRequired(), Length(min=5)],
+        id="searchbar")
 	submit = SubmitField('Search')
 
 class CourseData(FlaskForm):
