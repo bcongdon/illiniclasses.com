@@ -4,6 +4,23 @@
 <head>
     {% include "head.html" %}
     <title>Review Page</title>
+    <link rel='stylesheet' type='text/css' href='../static/css/review-styles.css'>
+    <script>
+    $(document).ready(function(){
+        $(function() {
+            $.ajax({
+                url: '{{ url_for("autocomplete") }}'
+                }).done(function (data) {
+                    console.log($('#searchbar'))
+                    $('#searchbar').autocomplete({
+                        source: data,
+                        minLength: 2
+                    });
+                });
+        });
+    });
+
+    </script>
 </head>
 
 <body>

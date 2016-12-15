@@ -24,9 +24,9 @@ mongo = PyMongo(app)
 
 app.secret_key = 'development-key'
 
-@app.before_first_request
-def setup_course_cache():
-	course_id_cache.get_course_ids(mongo)
+# @app.before_first_request
+# def setup_course_cache():
+# 	course_id_cache.get_course_ids(mongo)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
