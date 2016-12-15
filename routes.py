@@ -1,13 +1,9 @@
-from flask import Flask, flash, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect
 from data import SearchBar, CourseData
 from flask_pymongo import PyMongo
 # from db_credential import db_name, db_uri 	# For running locally (Heroku config vars for online)
-import requests
-from xmljson import badgerfish as bf
-from xml.etree.ElementTree import fromstring
-from json import dumps
 # from database_setup import update 	# Use to update db
-import time  
+import time
 import os 								# For Heroku config vars
 
 
@@ -24,6 +20,7 @@ mongo = PyMongo(app)
 
 app.secret_key = 'development-key'
 
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
 	search_form = SearchBar()
@@ -32,7 +29,7 @@ def index():
 		return render_template('index.html', search_bar=search_form, num_reviews=LOG.count())
 
 	elif request.method == 'POST':
-	
+
 		# Input from search bar
 		user_input = search_form.course_name.data
 
@@ -47,6 +44,7 @@ def index():
 		else:
 			return redirect(url_for('index'))
 
+
 @app.route('/<course>', methods=['GET', 'POST'])
 def review_page(course):
 	'''
@@ -56,7 +54,7 @@ def review_page(course):
 	'''
 	review_form = CourseData()
 	search_form = SearchBar()
-	
+
 	# Convert to uppercase and remove white spaces
 	course = course.upper().replace(" ", "")
 	# Get department id (e.g. CS) and course number in form of strings
@@ -92,7 +90,7 @@ def review_page(course):
 				'''
 				Review submission form
 				'''
-				current_time = time.localtime(time.time()) 
+				current_time = time.localtime(time.time())
 				current_time = str(current_time.tm_mon) + "/" + str(current_time.tm_mday) + "/" + str(current_time.tm_year)
 				insert_review(department_id, course, review_form.review.data, review_form.hours.data, current_time)
 				return redirect(url_for('review_page', course=course))
@@ -109,14 +107,14 @@ def review_page(course):
 			else:
 				reviews_list = {}
 				get_course['avg_hours'] = 'N/A'
-			
+
 			return render_template('review.html', search_bar=search_form, course=get_course, avg_hours=get_course['avg_hours'], 
 				avg_color=avg_color, reviews=reviews_list, des=description, form=review_form)
 		else:
 			return redirect(url_for('index'))
 
-# Check to see if a course input is valid
 def is_input_valid(department_id, course_number):
+	""" Check to see if a course input is valid """
 	course = department_id + ' ' + course_number
 
 	# Get a list of departments (collections) from database
@@ -128,10 +126,10 @@ def is_input_valid(department_id, course_number):
 	else:
 		result = mongo.db[department_id].find_one({'course_id': course})
 		if result == None:
-			return False 
+			return False
 		return True
 
-# Insert new reviews to the database
+
 def insert_review(department_id, course, review, hours, current_time):
 	'''
 	Get the reviews from the current course, append new review to the list,
@@ -153,8 +151,8 @@ def insert_review(department_id, course, review, hours, current_time):
 	review_dict = {'hours': hours, 'review': review, 'time': current_time, 'color': color}
 	new_reviews.append(review_dict)
 	review_list = {'course_id': current_course['course_id'], 'course_description': current_course['course_description'], 
-	'course_name': current_course['course_name'], 'avg_hours': avg_hours, 'reviews': new_reviews}
-	
+		'course_name': current_course['course_name'], 'avg_hours': avg_hours, 'reviews': new_reviews}
+
 	department.remove({'course_id': course})
 	department.insert(review_list)
 
@@ -170,20 +168,22 @@ def insert_review(department_id, course, review, hours, current_time):
 	department.update_one({'course_id:': 'CS 225'}, {'$push': {'reviews:': review_dict}})
 	'''
 
-# Parse workload from workload selectfield
 def get_workload(workload_str):
+	""" Parse workload from workload selectfield """
 	workload_dict = {'0': 0, 'Below 3 hours': 1.5, '3 to 6 hours': 4.5, '7 to 10 hours': 8.5, 
 	'11 to 14 hours': 12.5, '15 to 18 hours': 16.5, "I didn't have a life": 22.5}
 	return workload_dict[workload_str]
 
-# Calculate average workload per week
+
 def get_average_workload(workload_str, avg_workload, num_reviews):
+	""" Calculate average workload per week """
 	return round((avg_workload * num_reviews + get_workload(workload_str))/(num_reviews + 1), 2)
 
-# Choose a color for workload based on number of hours	
+
 def get_workload_color(workload):
-	workload_dict = {1.5: 'btn btn-info', 4.5: 'btn btn-info', 8.5: 'btn btn-primary', 
-	12.5: 'btn btn-warning', 16.5: 'btn btn-danger', 22.5: 'btn btn-danger'}
+	""" Choose a color for workload based on number of hours """
+	workload_dict = {1.5: 'btn btn-info', 4.5: 'btn btn-info', 8.5: 'btn btn-primary',
+		12.5: 'btn btn-warning', 16.5: 'btn btn-danger', 22.5: 'btn btn-danger'}
 	if workload <= 6:
 		return 'btn btn-info'
 	elif workload <= 10:
@@ -194,7 +194,4 @@ def get_workload_color(workload):
 		return 'btn btn-danger'
 
 if __name__ == '__main__':
-  app.run(debug=True)
-
-
-
+	app.run(debug=True)
