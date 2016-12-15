@@ -1,0 +1,19 @@
+<script>
+$(document).ready(function(){
+    $(function() {
+        $.ajax({
+            url: '{{ url_for("autocomplete") }}'
+            }).done(function (data) {
+
+                $('#searchbar').autocomplete({
+                    source: function(req, response) {
+                        var results = $.ui.autocomplete.filter(data, req.term);
+
+                        response(results.slice(0, 5));//for getting 5 results
+                    },
+                    minLength: 2,
+                });
+            });
+    });
+})
+</script>

@@ -5,22 +5,7 @@
     {% include "head.html" %}
     <title>Illini Classes | A crowdsourced course review at UIUC</title>
     <link rel='stylesheet' type='text/css' href='../static/css/index-styles.css'>
-    <script>
-    $(document).ready(function(){
-        $(function() {
-            $.ajax({
-                url: '{{ url_for("autocomplete") }}'
-                }).done(function (data) {
-                    console.log($('#searchbar'))
-                    $('#searchbar').autocomplete({
-                        source: data,
-                        minLength: 2
-                    });
-                });
-        });
-    });
-
-    </script>
+    {% include "autocomplete.html" %}
 </head>
 
 <body>
