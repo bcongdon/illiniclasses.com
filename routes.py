@@ -45,6 +45,7 @@ def index():
 		if is_input_valid(department_id, course_number) == True:
 			return redirect(url_for('review_page', course=department_id+course_number))
 		else:
+			flash("Couldn't find class: {} {}".format(department_id, course_number))
 			return redirect(url_for('index'))
 
 @app.route('/<course>', methods=['GET', 'POST'])
@@ -81,6 +82,7 @@ def review_page(course):
 			if is_input_valid(department_id, course_number) == True:
 				return redirect(url_for('review_page', course=department_id+course_number))
 			else:
+				flash("Couldn't find class: {} {}".format(department_id, course_number))
 				return redirect(url_for('review_page', course=course))
 
 		else:
